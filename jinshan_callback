@@ -1,0 +1,52 @@
+define("api", ["tool-cookie"],
+function() {
+    var e = {};
+    e.regist = function(t, n, o, i) {
+        o = o || {},
+        i = i || {};
+        var a = null;
+        return e[t] ? alert("鎺ュ彛###" + t + "###宸茬粡琚敞鍐岋紝璇峰彉鏇存帴鍙ｅ悕绉�") : void(e[t] = function(e, r) {
+            return a && (a.abort(), a = null),
+            "function" == typeof e && (r = e, e = {}),
+            a = $.ajax({
+                url: n,
+                data: $.extend(o, e),
+                type: i.type || "get",
+                dataType: i.dataType || "jsonp",
+                success: function(e) {
+                    r && r(e)
+                },
+                error: function(e) {
+                    console.log("Error: api(" + t + ")", e)
+                },
+                complete: function() {
+                    a = null
+                }
+            })
+        })
+    };
+    var t = ((new Date).getTime(), {
+        init: function() {
+            this.regist()
+        },
+        param: {
+            searchParam: {
+                a: "getWordMean",
+                c: "search"
+            },
+            searchWordUrl: "http://www.iciba.com/index.php"
+        },
+        regist: function() {
+            e.regist("baseinfo", this.param.searchWordUrl, $.extend({},
+            this.param.searchParam, {
+                list: "1,7,17"
+            })),
+            e.regist("maincontent", this.param.searchWordUrl, $.extend({},
+            this.param.searchParam, {
+                list: "1,2,3,4,5,8,9,10,12,13,14,15,18,21,22,24,3003,3004,3005"
+            }))
+        }
+    });
+    return t.init(),
+    e
+}),

@@ -1,0 +1,32 @@
+langIsDeteced: function(t, a, n, r) {
+            if (null !== t) {
+                var s = $(".select-from-language .language-selected").attr("data-lang"),
+                o = $(".select-to-language .language-selected").attr("data-lang"),
+                l = !1;
+                c.get("langChangedByUser") && t === o && (l = !0);
+                var g = null;
+                r && !c.get("fromLangIsAuto") && s !== t ? g = i.processOcrLang(t, s, o) : (e.show(t, s), g = i.getLang(t, s, o)),
+                u.show();
+                var d = this,
+                a = this.processQuery(a),
+                p = {
+                    from: g.fromLang,
+                    to: g.toLang,
+                    query: a,
+                    transtype: n,
+                    simple_means_flag: 3,
+                    sign: m(a),
+                    token: window.common.token
+                };
+                this.translateXHR && 4 !== this.translateXHR.readyState && this.translateXHR.abort(),
+                this.translateXHR = $.ajax({
+                    type: "POST",
+                    url: "/v2transapi",
+                    cache: !1,
+                    data: p
+                }).done(function(t) {
+                    c.set("isInRtTransState", !0),
+                    d.translateSuccess(t, g.fromLang, g.toLang, a, l)
+                })
+            }
+        },
